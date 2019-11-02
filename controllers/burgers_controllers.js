@@ -2,6 +2,18 @@ var express = require("express");
 var router = express.Router();
 var burger = require("../models/burger.js");
 
+//linking to JAWS_DB
+if (process.env.JAWSDB_URL) {
+    connection= mysql.createConnection(process.env.JAWSDB_URL);
+}
+else{connection= mysql.createConnection({
+    host: localhost,
+    user: "chase",
+    password: "Shadow27528",
+    database: burgers_db
+
+});
+};
 // get route to index
 router.get("/", function(req, res) {
   res.redirect("/burgers");
