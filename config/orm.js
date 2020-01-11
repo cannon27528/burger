@@ -1,30 +1,44 @@
 var connection = require("./connection.js");
 //create orm variable
 var orm = {
-  selectWhere: function(tableInput, colToSearch, valOfCol) {
-    var queryString = "SELECT * FROM ?? WHERE ?? = ?";
-    connection.query(queryString, [tableInput, colToSearch, valOfCol], function(err, result) {
-      if (err) throw err;
-      console.log(result);
+  selectAll: function(tableInput, cb) {
+    var queryString = "SELECT * FROM burgers_db.burgers";
+    connection.query(queryString, [tableInput], function(err, result) {
+      if (err){
+        throw err
+
+      } else {
+        
+        console.log(result)
+        cb(result);
+      }
     });
   },
-  selectAndOrder: function(whatToSelect, table, orderCol) {
-    var queryString = "SELECT ?? FROM ?? ORDER BY ?? DESC";
+  create: function(table, cols, vals, cb) {
+    var queryString = "INSERT INTO "+ table;
+    //TODO: complete query string
+    queryString += " (";
+    queryString += cols.toString();
+    queryString += ") ";
+    queryString += "vals (";
+    queryString += printQuestionMarks(vals.length);
+    queryString += ") ";
+
     console.log(queryString);
     connection.query(queryString, [whatToSelect, table, orderCol], function(err, result) {
       if (err) throw err;
       console.log(result);
     });
   },
-  findWhoHasMost: function(tableOneCol, tableTwoForeignKey, tableOne, tableTwo) {
-    var queryString =
-      "SELECT ??, COUNT(??) AS count FROM ?? LEFT JOIN ?? ON ??.??= ??.id GROUP BY ?? ORDER BY count DESC LIMIT 1";
+  updateOne: function(table, col, val, columnToUpdate, valueToUpdate, cb) {
+    var queryString = "UPDATE "+table+ "SET "+col+ "= "+val+ "WHERE "+columnToUpdate+ "= "+valueToUpdate+";";
 
     connection.query(
       queryString,
       [tableOneCol, tableOneCol, tableOne, tableTwo, tableTwo, tableTwoForeignKey, tableOne, tableOneCol],
       function(err, result) {
         if (err) throw err;
+        cb(result);
         console.log(result);
       }
     );
